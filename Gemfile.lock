@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    multiline (0.2.0)
+    multiline (0.2.1)
       unicode-display_width
       unicode-emoji
 
