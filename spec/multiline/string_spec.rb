@@ -190,6 +190,42 @@ EOF
       expect(text.col).to eq(13)
       expect(text.row).to eq(5)
     }
+
+    context "configure overwrite_display_width" do
+      before(:all) { Multiline.config.display_width_overwrite = { "─".ord => 2 } }
+      after(:all) { Multiline.config.display_width_overwrite = {} }
+
+      let(:text_1) do
+<<EOF
+１
+───
+１＋２
+EOF
+      end
+
+    let(:text_2) do
+<<EOF
+１
+───
+１＋２
+EOF
+    end
+
+      it {
+        text = Multiline::String.new(text_1)
+        text2 = Multiline::String.new("＋")
+        text3 = Multiline::String.new(text_2)
+        text.concat(text2)
+        text.concat(text3)
+        expect(text.to_s).to eq(
+<<EOF
+１      １    
+───＋───
+１＋２  １＋２
+EOF
+        )
+      }
+    end
   end
 end
 

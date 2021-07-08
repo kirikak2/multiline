@@ -4,8 +4,12 @@ module Multiline
     def initialize(str = "")
       @buf = str.split(/\n/)
       @row = @buf.count || 0
-      @col = @buf.map{|line| Unicode::DisplayWidth.of(line) }.max || 0
-      @buf = @buf.map{|line| line + " " * (@col - Unicode::DisplayWidth.of(line)) }
+      @col = @buf.map{|line| Unicode::DisplayWidth.of(line,
+                                                      Multiline.config.display_width_ambiguous,
+                                                      Multiline.config.display_width_overwrite) }.max || 0
+      @buf = @buf.map{|line| line + " " * (@col - Unicode::DisplayWidth.of(line,
+                                                                           Multiline.config.display_width_ambiguous,
+                                                                           Multiline.config.display_width_overwrite)) }
     end
 
     def +(other)
