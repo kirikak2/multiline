@@ -1,7 +1,15 @@
 module Multiline
   class Array < ::Array
     def join(sep = $,, align: :center)
-      max_row = self.max{|str| str.row }.row
+      max_row = self.map{|str|
+        case str
+        when ::String
+          str.split(/\n/).length
+        when Multiline::String
+          str.row
+        end
+      }.max
+
       buf = Multiline::String.new("", max_row)
       self.each_with_index do |str, index|
         case str
