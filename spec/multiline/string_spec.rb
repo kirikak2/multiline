@@ -79,6 +79,29 @@ EOF
     it {
       text = Multiline::String.new(text_1)
       text2 = Multiline::String.new(text_2)
+      expect(text2.concat(text, align: :top)).to eq(
+<<EOF
+aaa11111
+bbb222  
+ccc333  
+   44   
+   5    
+EOF
+    )
+      expect(text2.buf).to eq([
+        "aaa11111",
+        "bbb222  ",
+        "ccc333  ",
+        "   44   ",
+        "   5    "
+      ])
+      expect(text2.col).to eq(8)
+      expect(text2.row).to eq(5)
+    }
+
+    it {
+      text = Multiline::String.new(text_1)
+      text2 = Multiline::String.new(text_2)
       expect(text.concat(text2, align: :top)).to eq(
 <<EOF
 11111aaa

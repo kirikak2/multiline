@@ -1,9 +1,9 @@
 module Multiline
   class String
     attr_reader :row, :col, :buf
-    def initialize(str = "")
+    def initialize(str = "", buf_row = nil)
       @buf = str.split(/\n/)
-      @row = @buf.count || 0
+      @row = [@buf.length, buf_row].compact.max rescue binding.irb
       @col = @buf.map{|line| Unicode::DisplayWidth.of(line,
                                                       Multiline.config.display_width_ambiguous,
                                                       Multiline.config.display_width_overwrite) }.max || 0
@@ -20,6 +20,8 @@ module Multiline
 
     def concat(*arguments, align: :center)
       arguments.each do |arg|
+        org_col = @col
+        org_row = @row
         @col += arg.col
         @row = [@row, arg.row].max
 
@@ -39,7 +41,7 @@ module Multiline
           end
 
           for index in 0...row do
-            buf[index] ||= ""
+            buf[index] ||= " " * org_col
             line = buf[index]
             if index >= start_row && index < end_row
               line.concat(arg.buf[index - start_row])
